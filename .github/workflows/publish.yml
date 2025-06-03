@@ -1,16 +1,11 @@
 name: Publish to npm
 
-on:
-  push:
-    tags:
-      - "v*" # Triggers only on version tags like v1.0.0
-
 jobs:
   publish:
     name: Publish package
     runs-on: ubuntu-latest
     environment:
-      name: releases§
+      name: releases
 
     steps:
       - uses: actions/checkout@v3
