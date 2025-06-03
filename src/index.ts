@@ -2,7 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { program } from 'commander';
 import * as parser from '@babel/parser';
-import traverse from '@babel/traverse';
+
+import _traverse from '@babel/traverse';
+const traverse = (_traverse as any).default ?? _traverse;
 import type { ImportDeclaration } from '@babel/types';
 
 // Define CLI options
