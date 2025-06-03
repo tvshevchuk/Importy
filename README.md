@@ -1,1 +1,1 @@
-# ts-import-inspector
+# Importy
