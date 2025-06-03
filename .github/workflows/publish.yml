@@ -1,5 +1,10 @@
 name: Publish to npm
 
+on:
+  push:
+    tags:
+      - "v*" # Triggers on version tags like v1.0.0
+
 jobs:
   publish:
     name: Publish package
@@ -15,6 +20,9 @@ jobs:
         with:
           node-version: "20"
           registry-url: "https://registry.npmjs.org/"
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Publish to npm
         run: npm publish
