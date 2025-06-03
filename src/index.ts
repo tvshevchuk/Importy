@@ -1,105 +1,117 @@
-import fs from 'fs';
-import path from 'path';
-import { program } from 'commander';
-import * as parser from '@babel/parser';
+import fs from "fs";
+import path from "path";
+import { program } from "commander";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import { analyzeImports } from "./cli.js";
 
-import _traverse from '@babel/traverse';
-const traverse = (_traverse as any).default ?? _traverse;
-import type { ImportDeclaration } from '@babel/types';
+// Get current file path in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load package.json dynamically
+let packageJson;
+try {
+  const packagePath = path.resolve(__dirname, "../package.json");
+  const packageData = fs.readFileSync(packagePath, "utf8");
+  packageJson = JSON.parse(packageData);
+} catch (error) {
+  packageJson = { version: "0.0.0", name: "importy" }; // Fallback version
+  console.warn("Could not load package.json, using default version");
+}
+
+/**
+ * Importy - A CLI tool for analyzing JavaScript/TypeScript imports
+ *
+ * This tool scans a directory recursively for JS/TS files and identifies
+ * all imports from a specified library, providing a detailed report of
+ * which components are imported and where they are used.
+ */
 
 // Define CLI options
 program
-  .requiredOption('-d, --dir <directory>', 'Directory to scan')
-  .requiredOption('-l, --lib <library>', 'Library name to match')
+  .version(packageJson.version)
+  .description("Analyze JavaScript/TypeScript imports from a specific library")
+  .requiredOption("-d, --dir <directory>", "Directory to scan")
+  .requiredOption("-l, --lib <library>", "Library name to match")
+  .option(
+    "-o, --output <file>",
+    "Output results to a JSON file instead of stdout",
+  )
+  .option("-v, --verbose", "Enable verbose logging")
+  .option(
+    "-i, --include <pattern>",
+    "Only include files matching pattern (glob)",
+  )
+  .option("-e, --exclude <pattern>", "Exclude files matching pattern (glob)")
+  .option(
+    "-c, --concurrency <number>",
+    "Number of worker threads (defaults to CPU count - 1)",
+  )
   .parse(process.argv);
 
-const { dir, lib } = program.opts<{
+const options = program.opts<{
   dir: string;
   lib: string;
+  output?: string;
+  verbose: boolean;
+  include?: string;
+  exclude?: string;
+  concurrency?: string;
 }>();
 
-// Helpers
-function isJavaScriptFile(file: string): boolean {
-  return /\.(js|ts|jsx|tsx)$/.test(file);
-}
-
-function getAllFiles(dirPath: string, arrayOfFiles: string[] = []): string[] {
-  const files = fs.readdirSync(dirPath);
-  for (const file of files) {
-    const fullPath = path.join(dirPath, file);
-    const stat = fs.statSync(fullPath);
-    if (stat.isDirectory()) {
-      getAllFiles(fullPath, arrayOfFiles);
-    } else if (isJavaScriptFile(fullPath)) {
-      arrayOfFiles.push(fullPath);
-    }
-  }
-  return arrayOfFiles;
-}
-
-type ImportMatch = {
-  importedName: string;
-  localName: string;
-  file: string;
-};
-
-function extractImportsFromFile(filePath: string, targetLib: string): ImportMatch[] {
-  const code = fs.readFileSync(filePath, 'utf-8');
-  let ast;
+// Main application execution
+async function main() {
   try {
-    ast = parser.parse(code, {
-      sourceType: 'module',
-      plugins: ['typescript', 'jsx'],
+    // Convert CLI options to the expected format
+    const result = await analyzeImports({
+      dir: options.dir,
+      lib: options.lib,
+      include: options.include,
+      exclude: options.exclude,
+      verbose: options.verbose || false,
+      concurrency: options.concurrency
+        ? parseInt(options.concurrency, 10)
+        : undefined,
     });
-  } catch (err) {
-    console.warn(`Skipping ${filePath}: Failed to parse`);
-    return [];
-  }
 
-  const matches: ImportMatch[] = [];
-
-  traverse(ast, {
-    ImportDeclaration(path: any) {
-      const node = path.node as ImportDeclaration;
-      if (node.source.value === targetLib) {
-        for (const specifier of node.specifiers) {
-          const importedName =
-            'imported' in specifier && specifier.imported
-              ? specifier.imported.name as any
-              : 'default';
-          const localName = specifier.local.name;
-
-          matches.push({
-            importedName,
-            localName,
-            file: filePath,
-          });
-        }
+    // Output results
+    if (options.output) {
+      // Write to file if output option is specified
+      try {
+        fs.writeFileSync(options.output, JSON.stringify(result, null, 2));
+        console.log(`Results written to ${options.output}`);
+      } catch (error) {
+        console.error(
+          `Error writing to output file: ${error instanceof Error ? error.message : String(error)}`,
+        );
+        console.log(JSON.stringify(result, null, 2)); // Fallback to console
       }
-    },
-  });
-
-  return matches;
-}
-
-// Process all files and build result
-const allFiles = getAllFiles(dir);
-const componentMap: Record<string, Set<string>> = {};
-
-for (const file of allFiles) {
-  const imports = extractImportsFromFile(file, lib);
-  for (const { importedName, file: filePath } of imports) {
-    if (!componentMap[importedName]) {
-      componentMap[importedName] = new Set();
+    } else {
+      // Output to console
+      console.log(JSON.stringify(result, null, 2));
     }
-    componentMap[importedName].add(filePath);
+
+    // Exit with warning if no imports were found
+    if (Object.keys(result.components).length === 0) {
+      console.warn(
+        `No imports from '${options.lib}' were found in the specified directory.`,
+      );
+      process.exit(0);
+    }
+
+    return result;
+  } catch (error) {
+    console.error(
+      `Error during processing: ${error instanceof Error ? error.message : String(error)}`,
+    );
+    process.exit(1);
   }
 }
 
-// Final output
-const output: Record<string, string[]> = {};
-for (const [component, files] of Object.entries(componentMap)) {
-  output[component] = [...files];
-}
-
-console.log(JSON.stringify(output, null, 2));
+main().catch((error) => {
+  console.error(
+    `Unhandled error: ${error instanceof Error ? error.message : String(error)}`,
+  );
+  process.exit(1);
+});
