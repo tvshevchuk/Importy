@@ -1,4 +1,5 @@
-// extract-imports.js
+#!/usr/bin/env node
+
 import fs from "fs";
 import path from "path";
 import { program } from "commander";
@@ -47,10 +48,16 @@ function extractImportsFromFile(filePath, targetLib) {
   traverse(ast, {
     ImportDeclaration({ node }) {
       if (node.source.value === targetLib) {
-        matches.push({
-          file: filePath,
-          imports: node.specifiers.map((s) => s.local.name),
-        });
+        for (const specifier of node.specifiers) {
+          let importedName = specifier.imported?.name || "default";
+          let localName = specifier.local.name;
+
+          matches.push({
+            importedName,
+            localName,
+            file: filePath,
+          });
+        }
       }
     },
   });
@@ -59,11 +66,21 @@ function extractImportsFromFile(filePath, targetLib) {
 }
 
 const files = getAllFiles(dir);
-const results = [];
+const componentMap = {};
 
 for (const file of files) {
   const imports = extractImportsFromFile(file, lib);
-  if (imports.length) results.push(...imports);
+  for (const { importedName, file: filePath } of imports) {
+    if (!componentMap[importedName]) {
+      componentMap[importedName] = new Set();
+    }
+    componentMap[importedName].add(filePath);
+  }
 }
 
-console.log(JSON.stringify(results, null, 2));
+// Convert Set to array for output
+const output = Object.fromEntries(
+  Object.entries(componentMap).map(([name, paths]) => [name, [...paths]]),
+);
+
+console.log(JSON.stringify(output, null, 2));
