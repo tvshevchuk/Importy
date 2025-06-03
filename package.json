@@ -1,10 +1,11 @@
 {
   "name": "importy",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "",
   "type": "module",
+  "main": "./dist/index.js",
   "bin": {
-    "inspect-imports": "./bin/index.js"
+    "inspect-imports": "./dist/index.js"
   },
   "keywords": [],
   "author": "Taras Shevchuk",
@@ -13,8 +14,14 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "scripts": {
+    "build": "tsup"
+  },
   "devDependencies": {
-    "@types/node": "^22.15.29"
+    "@babel/types": "^7.27.3",
+    "@types/node": "^22.15.29",
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
   },
   "dependencies": {
     "@babel/parser": "^7.27.5",
