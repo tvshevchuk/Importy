@@ -1,10 +1,15 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { execSync } from 'node:child_process';
 import { join } from 'node:path';
+import { readFileSync } from 'node:fs';
 
 describe('Node.js Version Check', () => {
   const originalProcessVersion = process.version;
   const distPath = join(process.cwd(), 'dist', 'index.js');
+  
+  // Read current version from package.json
+  const packageJson = JSON.parse(readFileSync(join(process.cwd(), 'package.json'), 'utf8'));
+  const currentVersion = packageJson.version;
 
   beforeEach(() => {
     // Ensure the build exists
@@ -26,7 +31,7 @@ describe('Node.js Version Check', () => {
 
   it('should accept Node.js 18+', () => {
     const result = execSync(`node ${distPath} --version`, { encoding: 'utf8' });
-    expect(result.trim()).toBe('0.2.0');
+    expect(result.trim()).toBe(currentVersion);
   });
 
   it('should show help when Node.js version is supported', () => {
@@ -44,7 +49,7 @@ describe('Node.js Version Check', () => {
     
     // Test that the CLI runs without version errors
     const result = execSync(`node ${distPath} --version`, { encoding: 'utf8' });
-    expect(result.trim()).toBe('0.2.0');
+    expect(result.trim()).toBe(currentVersion);
   });
 
   it('should exit with error for unsupported Node.js versions', () => {
