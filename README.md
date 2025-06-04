@@ -1,6 +1,5 @@
-<img align="right" src="public/importy.png" alt="Importy CLI Tool" height="120" />
-
 # Importy
+<img align="right" src="public/importy.png" alt="Importy CLI Tool" height="120" />
 
 A powerful CLI tool for analyzing JavaScript/TypeScript imports from libraries.
 
