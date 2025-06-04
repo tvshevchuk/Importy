@@ -1,6 +1,6 @@
 {
   "name": "importy",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "description": "A CLI tool for analyzing JavaScript/TypeScript imports from libraries",
   "repository": {
     "type": "git",
@@ -9,7 +9,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "bin": {
-    "inspect-imports": "./dist/index.js"
+    "importy": "./dist/index.js"
   },
   "author": "Taras Shevchuk",
   "license": "MIT",
