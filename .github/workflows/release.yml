@@ -1,0 +1,161 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "README.md"
+      - "CHANGELOG.md"
+      - ".github/**"
+      - "docs/**"
+
+jobs:
+  check-version:
+    name: Check if version changed
+    runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.check.outputs.changed }}
+      new_version: ${{ steps.check.outputs.version }}
+      tag_exists: ${{ steps.check.outputs.tag_exists }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check version change
+        id: check
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          PREVIOUS_VERSION=$(git show HEAD~1:package.json | node -p "JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8')).version")
+
+          echo "Current version: $CURRENT_VERSION"
+          echo "Previous version: $PREVIOUS_VERSION"
+
+          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+          # Check if tag already exists
+          if git tag | grep -q "^v$CURRENT_VERSION$"; then
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          fi
+
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: check-version
+    if: needs.check-version.outputs.version_changed == 'true' && needs.check-version.outputs.tag_exists == 'false'
+    environment:
+      name: releases
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          registry-url: "https://registry.npmjs.org/"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run quality checks
+        run: |
+          pnpm run check
+          pnpm test
+
+      - name: Build
+        run: pnpm build
+
+      - name: Update changelog
+        run: |
+          TODAY=$(date +%Y-%m-%d)
+          VERSION="${{ needs.check-version.outputs.new_version }}"
+
+          # Update changelog if it has Unreleased section
+          if grep -q "## \[Unreleased\]" CHANGELOG.md; then
+            sed -i "s/## \[Unreleased\]/## [$VERSION] - $TODAY/" CHANGELOG.md
+
+            # Commit changelog update
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add CHANGELOG.md
+            git commit -m "Update changelog for v$VERSION" || echo "No changelog changes to commit"
+            git push origin main
+          fi
+
+      - name: Create Git Tag
+        run: |
+          VERSION="${{ needs.check-version.outputs.new_version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          git push origin "v$VERSION"
+
+      - name: Extract changelog for release
+        id: changelog
+        run: |
+          VERSION="${{ needs.check-version.outputs.new_version }}"
+
+          # Extract changelog section for this version
+          if [ -f CHANGELOG.md ]; then
+            # Get content between current version and next version/end of file
+            CHANGELOG_CONTENT=$(sed -n "/## \[$VERSION\]/,/## \[/p" CHANGELOG.md | sed '$d' | tail -n +2)
+
+            # If no content found, use a default message
+            if [ -z "$CHANGELOG_CONTENT" ]; then
+              CHANGELOG_CONTENT="Release version $VERSION.
+
+              See the full changelog at: https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md"
+            fi
+          else
+            CHANGELOG_CONTENT="Release version $VERSION"
+          fi
+
+          # Save to file to handle multiline content
+          echo "$CHANGELOG_CONTENT" > release_notes.md
+          echo "content_file=release_notes.md" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.check-version.outputs.new_version }}
+          release_name: Release v${{ needs.check-version.outputs.new_version }}
+          body_path: ${{ steps.changelog.outputs.content_file }}
+          draft: false
+          prerelease: false
+
+      - name: Publish to npm
+        run: pnpm publish --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  notify:
+    name: Notify Release Success
+    runs-on: ubuntu-latest
+    needs: [check-version, release]
+    if: always() && needs.release.result == 'success'
+    steps:
+      - name: Release Success Notification
+        run: |
+          echo "🎉 Successfully released v${{ needs.check-version.outputs.new_version }}"
+          echo "📦 Package published to npm"
+          echo "🏷️ GitHub release created"
+          echo "🔗 Release URL: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.check-version.outputs.new_version }}"
