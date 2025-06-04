@@ -5,6 +5,8 @@ A powerful CLI tool for analyzing JavaScript/TypeScript imports from libraries.
 [![npm version](https://img.shields.io/npm/v/importy.svg)](https://www.npmjs.com/package/importy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+![Importy CLI Tool](public/importy.png)
+
 ## Overview
 
 Importy scans your codebase to identify and analyze imports from specific libraries. It helps you:
