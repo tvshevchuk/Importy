@@ -1,10 +1,17 @@
 {
   "name": "importy",
-  "version": "0.0.11",
+  "version": "0.1.0",
   "description": "A CLI tool for analyzing JavaScript/TypeScript imports from libraries",
+  "homepage": "https://github.com/tvshevchuk/Importy#readme",
+  "bugs": {
+    "url": "https://github.com/tvshevchuk/Importy/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/tvshevchuk/Importy"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   },
   "type": "module",
   "main": "./dist/index.js",
@@ -31,7 +38,18 @@
     "format": "biome format src/",
     "format:fix": "biome format --write src/",
     "check": "biome check src/",
-    "check:fix": "biome check --write src/"
+    "check:fix": "biome check --write src/",
+    "prebuild": "npm run check",
+    "prepublishOnly": "npm run test && npm run build",
+    "version": "npm run check:fix && git add -A src",
+    "postversion": "git push && git push --tags",
+    "release": "./scripts/release.sh",
+    "release:patch": "./scripts/release.sh patch",
+    "release:minor": "./scripts/release.sh minor",
+    "release:major": "./scripts/release.sh major",
+    "release:check": "./scripts/release.sh --check",
+    "release:manual": "./scripts/release.sh --manual",
+    "prerelease": "npm run test && npm run check"
   },
   "devDependencies": {
     "@babel/types": "7.27.3",

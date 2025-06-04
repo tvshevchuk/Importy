@@ -6,6 +6,8 @@ A powerful CLI tool for analyzing JavaScript/TypeScript imports from libraries.
 [![npm version](https://img.shields.io/npm/v/importy.svg)](https://www.npmjs.com/package/importy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+> **Version 0.1.0** - First stable release! 🎉 See [CHANGELOG.md](CHANGELOG.md) for details.
+
 ## Overview
 
 Importy scans your codebase to identify and analyze imports from specific libraries. It helps you:
@@ -26,6 +28,9 @@ yarn global add importy
 
 # Using pnpm
 pnpm add -g importy
+
+# Verify installation
+importy --version  # Should output: 0.1.0
 ```
 
 ## Usage
@@ -112,7 +117,7 @@ Importy uses parallel processing with promises, making it efficient even for lar
 
 ### Prerequisites
 
-- Node.js 16+
+- Node.js 18+
 - npm, yarn, or pnpm
 
 ### Setup
@@ -159,12 +164,48 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+### Development Workflow
+
+```bash
+# Setup
+git clone https://github.com/tvshevchuk/Importy.git
+cd importy
+pnpm install
+
+# Development
+npm run dev          # Development mode
+npm run check        # Code quality checks
+npm test            # Run tests
+npm run build       # Build project
+
+# Release (maintainers only)
+npm run release:check    # Check if ready for release
+npm run release:patch    # Create patch release
+npm run release:minor    # Create minor release
+npm run release:major    # Create major release
+```
+
+### Automated Releases
+
+This project uses automated releases via GitHub Actions. When a pull request with a version bump is merged to main, it automatically:
+
+- Runs tests and quality checks
+- Updates the changelog
+- Creates a GitHub release
+- Publishes to npm
+
+See [Release Process](.github/RELEASE_PROCESS.md) for detailed information.
+
 ## Troubleshooting
 
 ### Common Issues
 
-- **ES Module Compatibility**: If you encounter issues with ES modules, ensure your Node.js version is compatible (16+) and you're using the correct import syntax.
+- **ES Module Compatibility**: If you encounter issues with ES modules, ensure your Node.js version is compatible (18+) and you're using the correct import syntax.
 - **Parsing Errors**: Complex TypeScript/JSX syntax may occasionally cause parsing errors. These files are skipped with a warning.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for a detailed history of changes and releases.
 
 ## License
 

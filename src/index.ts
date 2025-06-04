@@ -5,6 +5,18 @@ import { fileURLToPath } from "node:url";
 import { program } from "commander";
 import { analyzeImports } from "./cli.js";
 
+// Check Node.js version compatibility
+const REQUIRED_NODE_VERSION = 18;
+const currentNodeVersion = Number.parseInt(process.version.slice(1).split(".")[0], 10);
+
+if (currentNodeVersion < REQUIRED_NODE_VERSION) {
+  console.error(
+    `❌ Error: Node.js ${REQUIRED_NODE_VERSION}+ is required. You are running Node.js ${process.version}`,
+  );
+  console.error("Please upgrade your Node.js version: https://nodejs.org/");
+  process.exit(1);
+}
+
 // Get current file path in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

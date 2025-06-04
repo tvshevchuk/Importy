@@ -1,19 +1,30 @@
-name: Publish
+name: Manual Publish
 
 on:
-  push:
-    tags:
-      - "v*" # triggers on tags like v1.0.0
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (leave empty for current package.json version)'
+        required: false
+        type: string
+      dry_run:
+        description: 'Perform a dry run without actually publishing'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
-  publish:
-    name: Publish package
+  manual-publish:
+    name: Manual publish to npm
     runs-on: ubuntu-latest
     environment:
       name: releases
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -25,15 +36,49 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
-      - name: Run tests
-        run: pnpm test
+      - name: Run quality checks
+        run: |
+          pnpm run check
+          pnpm test
 
       - name: Build
         run: pnpm build
 
+      - name: Check version
+        run: |
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          INPUT_VERSION="${{ github.event.inputs.version }}"
+          
+          if [ -n "$INPUT_VERSION" ]; then
+            echo "Publishing specified version: $INPUT_VERSION"
+            # Update package.json version if specified
+            npm version $INPUT_VERSION --no-git-tag-version
+          else
+            echo "Publishing current version: $CURRENT_VERSION"
+          fi
+
+      - name: Dry run publish
+        if: github.event.inputs.dry_run == 'true'
+        run: |
+          echo "🧪 Performing dry run..."
+          pnpm publish --dry-run --no-git-checks
+
       - name: Publish to npm
-        run: pnpm publish --no-git-checks
+        if: github.event.inputs.dry_run != 'true'
+        run: |
+          echo "📦 Publishing to npm..."
+          pnpm publish --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Success notification
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            echo "✅ Dry run completed successfully for version $VERSION"
+          else
+            echo "🎉 Successfully published version $VERSION to npm"
+            echo "📦 Package URL: https://www.npmjs.com/package/importy"
+          fi
