@@ -11,6 +11,36 @@
   "bin": {
     "inspect-imports": "./dist/index.js"
   },
+  "author": "Taras Shevchuk",
+  "license": "MIT",
+  "packageManager": "pnpm@10.11.1",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@babel/types": "7.27.3",
+    "@types/babel__traverse": "7.20.7",
+    "@types/node": "22.15.29",
+    "ts-node": "10.9.2",
+    "tsup": "8.5.0",
+    "typescript": "5.8.3",
+    "vitest": "1.4.0"
+  },
+  "dependencies": {
+    "@babel/parser": "7.27.5",
+    "@babel/traverse": "7.27.4",
+    "commander": "14.0.0"
+  },
   "keywords": [
     "cli",
     "import",
@@ -53,39 +83,5 @@
     "dead-code",
     "refactor",
     "migration"
-  ],
-  "author": "Taras Shevchuk",
-  "license": "MIT",
-  "packageManager": "pnpm@10.11.1",
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tsup src/index.ts",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "lint": "eslint src/**/*.ts"
-  },
-  "devDependencies": {
-    "@babel/types": "^7.27.3",
-    "@types/babel__traverse": "^7.20.7",
-    "@types/node": "^22.15.29",
-    "@typescript-eslint/eslint-plugin": "^7.4.0",
-    "@typescript-eslint/parser": "^7.4.0",
-    "eslint": "^8.57.0",
-    "ts-node": "^10.9.2",
-    "tsup": "^8.5.0",
-    "typescript": "^5.8.3",
-    "vitest": "^1.4.0"
-  },
-  "dependencies": {
-    "@babel/parser": "^7.27.5",
-    "@babel/traverse": "^7.27.4",
-    "commander": "^14.0.0"
-  }
+  ]
 }

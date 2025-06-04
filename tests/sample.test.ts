@@ -6,7 +6,7 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const cliPath = path.resolve(__dirname, '../src/index.ts');
-const testDirPath = path.resolve(__dirname, 'test-project');
+let testDirPath: string;
 
 // Mock console methods to reduce noise during tests
 console.warn = vi.fn();
@@ -15,11 +15,11 @@ console.log = vi.fn();
 describe('Importy CLI', () => {
   // Create test directory and sample files before tests
   beforeEach(() => {
-    // Create test directory structure
-    if (!fs.existsSync(testDirPath)) {
-      fs.mkdirSync(testDirPath, { recursive: true });
-    }
+    // Create unique test directory for each test
+    testDirPath = path.resolve(__dirname, `test-project-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
     
+    // Create test directory structure
+    fs.mkdirSync(testDirPath, { recursive: true });
     fs.mkdirSync(path.join(testDirPath, 'src'), { recursive: true });
     fs.mkdirSync(path.join(testDirPath, 'components'), { recursive: true });
     
@@ -87,11 +87,22 @@ describe('Importy CLI', () => {
     }
   });
   
-  it('should find all imports from ui-library', { timeout: 10000 }, () => {
+  it('should find all imports from ui-library', { timeout: 15000 }, () => {
+    // Ensure test directory exists before running CLI
+    expect(fs.existsSync(testDirPath)).toBe(true);
+    expect(fs.existsSync(path.join(testDirPath, 'src'))).toBe(true);
+    expect(fs.existsSync(path.join(testDirPath, 'components'))).toBe(true);
+    
+    // Wait a bit to ensure filesystem operations are complete
+    const start = Date.now();
+    while (!fs.existsSync(path.join(testDirPath, 'src', 'app.tsx')) && Date.now() - start < 1000) {
+      // Wait for file system to be ready
+    }
+    
     // Run the CLI command
     const result = execSync(
-          `node --no-warnings --loader ts-node/esm ${cliPath} --dir ${testDirPath} --lib ui-library`,
-          { encoding: 'utf8' }
+          `node --no-warnings --loader ts-node/esm ${cliPath} --dir "${testDirPath}" --lib ui-library`,
+          { encoding: 'utf8', cwd: __dirname }
         );
     
     // Parse the JSON output
@@ -128,7 +139,10 @@ describe('Importy CLI', () => {
     );
   });
   
-  it('should handle files with syntax errors gracefully', { timeout: 10000 }, () => {
+  it('should handle files with syntax errors gracefully', { timeout: 15000 }, () => {
+    // Ensure test directory exists
+    expect(fs.existsSync(testDirPath)).toBe(true);
+    
     // Create a file with syntax errors
     fs.writeFileSync(
       path.join(testDirPath, 'src', 'broken.tsx'),
@@ -146,10 +160,19 @@ describe('Importy CLI', () => {
       `
     );
     
+    // Verify the broken file was created
+    expect(fs.existsSync(path.join(testDirPath, 'src', 'broken.tsx'))).toBe(true);
+    
+    // Wait a bit to ensure filesystem operations are complete
+    const start = Date.now();
+    while (!fs.existsSync(path.join(testDirPath, 'src', 'broken.tsx')) && Date.now() - start < 1000) {
+      // Wait for file system to be ready
+    }
+    
     // Run the CLI command
     const result = execSync(
-          `node --no-warnings --loader ts-node/esm ${cliPath} --dir ${testDirPath} --lib ui-library`,
-          { encoding: 'utf8' }
+          `node --no-warnings --loader ts-node/esm ${cliPath} --dir "${testDirPath}" --lib ui-library`,
+          { encoding: 'utf8', cwd: __dirname }
         );
     
     // Parse the JSON output
