@@ -110,7 +110,7 @@ Since this is the first stable release, there are no breaking changes to migrate
 
 - All CLI options remain the same
 - Output format is now standardized and stable
-- Node.js 16+ is now required (previously worked with Node.js 14+)
+- Node.js 18+ is now required (previously worked with Node.js 14+)
 
 ### 🤝 Contributing
 

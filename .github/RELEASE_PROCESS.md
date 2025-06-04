@@ -120,7 +120,7 @@ git push origin main --tags
 ### `.github/workflows/ci.yml`
 - **Trigger**: PRs and pushes to main
 - **Actions**: Tests, linting, build verification
-- **Matrix**: Tests on Node.js 16, 18, 20
+- **Matrix**: Tests on Node.js 18, 20
 
 ## Release Types
 
@@ -143,6 +143,12 @@ git push origin main --tags
 - Significant architecture changes
 
 ## Environment Setup
+
+### Node.js Version
+
+This project requires Node.js 18 or later. The workflows are configured to test on:
+- Node.js 18 (minimum supported)
+- Node.js 20 (recommended)
 
 ### Required Secrets
 

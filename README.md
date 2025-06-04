@@ -117,7 +117,7 @@ Importy uses parallel processing with promises, making it efficient even for lar
 
 ### Prerequisites
 
-- Node.js 16+
+- Node.js 18+
 - npm, yarn, or pnpm
 
 ### Setup
@@ -200,7 +200,7 @@ See [Release Process](.github/RELEASE_PROCESS.md) for detailed information.
 
 ### Common Issues
 
-- **ES Module Compatibility**: If you encounter issues with ES modules, ensure your Node.js version is compatible (16+) and you're using the correct import syntax.
+- **ES Module Compatibility**: If you encounter issues with ES modules, ensure your Node.js version is compatible (18+) and you're using the correct import syntax.
 - **Parsing Errors**: Complex TypeScript/JSX syntax may occasionally cause parsing errors. These files are skipped with a warning.
 
 ## Changelog
