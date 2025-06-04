@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import { program } from "commander";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import { analyzeImports } from "./cli.js";
 
 // Get current file path in ESM
@@ -10,12 +10,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Load package.json dynamically
-let packageJson;
+let packageJson: { version: string; name: string };
 try {
   const packagePath = path.resolve(__dirname, "../package.json");
   const packageData = fs.readFileSync(packagePath, "utf8");
   packageJson = JSON.parse(packageData);
-} catch (error) {
+} catch (_error) {
   packageJson = { version: "0.0.0", name: "importy" }; // Fallback version
   console.warn("Could not load package.json, using default version");
 }
@@ -34,20 +34,11 @@ program
   .description("Analyze JavaScript/TypeScript imports from a specific library")
   .requiredOption("-d, --dir <directory>", "Directory to scan")
   .requiredOption("-l, --lib <library>", "Library name to match")
-  .option(
-    "-o, --output <file>",
-    "Output results to a JSON file instead of stdout",
-  )
+  .option("-o, --output <file>", "Output results to a JSON file instead of stdout")
   .option("-v, --verbose", "Enable verbose logging")
-  .option(
-    "-i, --include <pattern>",
-    "Only include files matching pattern (glob)",
-  )
+  .option("-i, --include <pattern>", "Only include files matching pattern (glob)")
   .option("-e, --exclude <pattern>", "Exclude files matching pattern (glob)")
-  .option(
-    "-c, --concurrency <number>",
-    "Number of worker threads (defaults to CPU count - 1)",
-  )
+  .option("-c, --concurrency <number>", "Number of worker threads (defaults to CPU count - 1)")
   .parse(process.argv);
 
 const options = program.opts<{
@@ -70,9 +61,7 @@ async function main() {
       include: options.include,
       exclude: options.exclude,
       verbose: options.verbose || false,
-      concurrency: options.concurrency
-        ? parseInt(options.concurrency, 10)
-        : undefined,
+      concurrency: options.concurrency ? Number.parseInt(options.concurrency, 10) : undefined,
     });
 
     // Output results
@@ -94,9 +83,7 @@ async function main() {
 
     // Exit with warning if no imports were found
     if (Object.keys(result.components).length === 0) {
-      console.warn(
-        `No imports from '${options.lib}' were found in the specified directory.`,
-      );
+      console.warn(`No imports from '${options.lib}' were found in the specified directory.`);
       process.exit(0);
     }
 
@@ -110,8 +97,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error(
-    `Unhandled error: ${error instanceof Error ? error.message : String(error)}`,
-  );
+  console.error(`Unhandled error: ${error instanceof Error ? error.message : String(error)}`);
   process.exit(1);
 });

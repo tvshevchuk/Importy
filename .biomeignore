@@ -1,0 +1,16 @@
+# Files and directories to ignore
+dist/
+node_modules/
+coverage/
+*.log
+.git/
+.vscode/
+.idea/
+*.d.ts
+tests/
+vitest.config.ts
+tsup.config.ts
+tsconfig.json
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

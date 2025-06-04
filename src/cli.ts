@@ -1,10 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
 import * as parser from "@babel/parser";
 import _traverse from "@babel/traverse";
-import type { ImportDeclaration } from "@babel/types";
-import os from 'os';
+import type { File, ImportDeclaration } from "@babel/types";
 
 const traverse = _traverse.default;
 
@@ -35,40 +34,40 @@ export interface ImportyResult {
   components: Record<string, string[]>;
 }
 
-// Helper functions 
+// Helper functions
 function isJavaScriptFile(file: string): boolean {
   return /\.(js|ts|jsx|tsx)$/.test(file);
 }
 
 function getAllFiles(
-  dirPath: string, 
+  dirPath: string,
   arrayOfFiles: string[] = [],
   includePattern?: string,
   excludePattern?: string,
-  verbose = false
+  verbose = false,
 ): string[] {
   try {
     const files = fs.readdirSync(dirPath);
-    
+
     for (const file of files) {
       const fullPath = path.join(dirPath, file);
-      
+
       try {
         const stat = fs.statSync(fullPath);
-        
+
         // Skip directories that match exclude pattern
         if (excludePattern && stat.isDirectory() && minimatch(fullPath, excludePattern)) {
           if (verbose) console.log(`Skipping excluded directory: ${fullPath}`);
           continue;
         }
-        
+
         if (stat.isDirectory()) {
           getAllFiles(fullPath, arrayOfFiles, includePattern, excludePattern, verbose);
         } else if (isJavaScriptFile(fullPath)) {
           // Check include/exclude patterns for files
           const shouldInclude = !includePattern || minimatch(fullPath, includePattern);
           const shouldExclude = excludePattern && minimatch(fullPath, excludePattern);
-          
+
           if (shouldInclude && !shouldExclude) {
             arrayOfFiles.push(fullPath);
           } else if (verbose) {
@@ -76,11 +75,17 @@ function getAllFiles(
           }
         }
       } catch (error) {
-        if (verbose) console.warn(`Error accessing file ${fullPath}: ${error instanceof Error ? error.message : String(error)}`);
+        if (verbose)
+          console.warn(
+            `Error accessing file ${fullPath}: ${error instanceof Error ? error.message : String(error)}`,
+          );
       }
     }
   } catch (error) {
-    if (verbose) console.error(`Error reading directory ${dirPath}: ${error instanceof Error ? error.message : String(error)}`);
+    if (verbose)
+      console.error(
+        `Error reading directory ${dirPath}: ${error instanceof Error ? error.message : String(error)}`,
+      );
   }
   return arrayOfFiles;
 }
@@ -89,16 +94,16 @@ function minimatch(filePath: string, pattern: string): boolean {
   try {
     // Simple glob pattern matching implementation
     const regExpPattern = pattern
-      .replace(/\./g, '\\.')
-      .replace(/\*\*/g, '{{GLOBSTAR}}')
-      .replace(/\*/g, '[^/]*')
-      .replace(/\?/g, '[^/]')
-      .replace(/{{GLOBSTAR}}/g, '.*');
-    
-    const regex = new RegExp(`^${regExpPattern}$`, 'i');
+      .replace(/\./g, "\\.")
+      .replace(/\*\*/g, "{{GLOBSTAR}}")
+      .replace(/\*/g, "[^/]*")
+      .replace(/\?/g, "[^/]")
+      .replace(/{{GLOBSTAR}}/g, ".*");
+
+    const regex = new RegExp(`^${regExpPattern}$`, "i");
     const result = regex.test(filePath);
     return result;
-  } catch (error) {
+  } catch (_error) {
     console.warn(`Invalid pattern: ${pattern}`);
     return false;
   }
@@ -116,7 +121,7 @@ async function processFilesInBatches<T, R>(
   items: T[],
   batchSize: number,
   processor: (item: T) => Promise<R> | R,
-  onProgress?: (completed: number, total: number) => void
+  onProgress?: (completed: number, total: number) => void,
 ): Promise<R[]> {
   const results: R[] = [];
   const batches = chunkArray(items, batchSize);
@@ -135,16 +140,18 @@ async function processFilesInBatches<T, R>(
           }
           return result;
         } catch (error) {
-          console.warn(`Error processing item: ${error instanceof Error ? error.message : String(error)}`);
+          console.warn(
+            `Error processing item: ${error instanceof Error ? error.message : String(error)}`,
+          );
           completed++;
           if (onProgress) {
             onProgress(completed, total);
           }
           return [] as unknown as R;
         }
-      })
+      }),
     );
-    
+
     // Collect results
     results.push(...batchResults);
   }
@@ -152,14 +159,11 @@ async function processFilesInBatches<T, R>(
   return results;
 }
 
-function extractImportsFromFile(
-  filePath: string,
-  targetLib: string,
-): ImportMatch[] {
+function extractImportsFromFile(filePath: string, targetLib: string): ImportMatch[] {
   try {
     const code = fs.readFileSync(filePath, "utf-8");
-    let ast;
-    
+    let ast: File;
+
     try {
       // Attempt to parse the file as JS/TS
       ast = parser.parse(code, {
@@ -167,7 +171,7 @@ function extractImportsFromFile(
         plugins: ["typescript", "jsx"],
         errorRecovery: true,
       });
-    } catch (err) {
+    } catch (_err) {
       // Try again with more plugins if initial parsing fails
       try {
         ast = parser.parse(code, {
@@ -182,41 +186,45 @@ function extractImportsFromFile(
     }
 
     const matches: ImportMatch[] = [];
-    const lines = code.split('\n');
-    
+    // const lines = code.split("\n"); // Kept for potential future use
+
     traverse(ast, {
       ImportDeclaration(path) {
         const node = path.node as ImportDeclaration;
-        
+
         // Check if this import is from our target library
-        if (node.source.value === targetLib || 
-            // Handle subpath imports like 'library/subpath'
-            node.source.value.startsWith(`${targetLib}/`)) {
-          
+        if (
+          node.source.value === targetLib ||
+          // Handle subpath imports like 'library/subpath'
+          node.source.value.startsWith(`${targetLib}/`)
+        ) {
           // Get the line number of this import
           const lineNumber = node.loc?.start.line;
-          
+
           for (const specifier of node.specifiers) {
             // Handle different import types (named, default, namespace)
             let importedName: string;
-            
-            if (specifier.type === 'ImportDefaultSpecifier') {
-              importedName = 'default';
-            } else if (specifier.type === 'ImportNamespaceSpecifier') {
-              importedName = '*';
-            } else if ('imported' in specifier && specifier.imported) {
-              importedName = specifier.imported.type === 'Identifier' ? specifier.imported.name : String(specifier.imported.value);
+
+            if (specifier.type === "ImportDefaultSpecifier") {
+              importedName = "default";
+            } else if (specifier.type === "ImportNamespaceSpecifier") {
+              importedName = "*";
+            } else if ("imported" in specifier && specifier.imported) {
+              importedName =
+                specifier.imported.type === "Identifier"
+                  ? specifier.imported.name
+                  : String(specifier.imported.value);
             } else {
-              importedName = 'unknown';
+              importedName = "unknown";
             }
-            
+
             const localName = specifier.local.name;
 
             matches.push({
               importedName,
               localName,
               file: filePath,
-              line: lineNumber
+              line: lineNumber,
             });
           }
         }
@@ -225,7 +233,9 @@ function extractImportsFromFile(
 
     return matches;
   } catch (error) {
-    console.warn(`Error reading file ${filePath}: ${error instanceof Error ? error.message : String(error)}`);
+    console.warn(
+      `Error reading file ${filePath}: ${error instanceof Error ? error.message : String(error)}`,
+    );
     return [];
   }
 }
@@ -234,7 +244,7 @@ function extractImportsFromFile(
 export async function analyzeImports(options: ImportyOptions): Promise<ImportyResult> {
   const { dir, lib, include, exclude, verbose = false } = options;
   const concurrency = options.concurrency || Math.max(1, Math.min(4, os.cpus().length - 1));
-  
+
   // Validate directory exists
   if (!fs.existsSync(dir)) {
     throw new Error(`Directory '${dir}' does not exist`);
@@ -243,27 +253,28 @@ export async function analyzeImports(options: ImportyOptions): Promise<ImportyRe
   if (!fs.statSync(dir).isDirectory()) {
     throw new Error(`'${dir}' is not a directory`);
   }
-  
+
   // Process all files and build result
   const allFiles = getAllFiles(dir, [], include, exclude, verbose);
   if (verbose) console.log(`Found ${allFiles.length} files to process`);
-  
+
   if (allFiles.length === 0) {
     return {
       summary: {
         library: lib,
         componentsFound: 0,
         totalImports: 0,
-        filesScanned: 0
+        filesScanned: 0,
       },
-      components: {}
+      components: {},
     };
   }
 
   // Determine batch size based on concurrency
   const batchSize = Math.max(1, Math.ceil(allFiles.length / concurrency));
-  if (verbose) console.log(`Processing ${allFiles.length} files with ${concurrency} concurrent processes`);
-  
+  if (verbose)
+    console.log(`Processing ${allFiles.length} files with ${concurrency} concurrent processes`);
+
   // Process each file and collect results
   let processedCount = 0;
   const results = await processFilesInBatches(
@@ -279,12 +290,12 @@ export async function analyzeImports(options: ImportyOptions): Promise<ImportyRe
           console.log(`Progress: ${percentComplete}% (${completed}/${total} files)`);
         }
       }
-    }
+    },
   );
-  
+
   // Flatten results and build component map
   const componentMap: Record<string, Set<string>> = {};
-    
+
   // Process all results
   for (const imports of results) {
     if (!imports) {
@@ -297,28 +308,30 @@ export async function analyzeImports(options: ImportyOptions): Promise<ImportyRe
       componentMap[importedName].add(filePath);
     }
   }
-    
+
   // Final output
   const output: Record<string, string[]> = {};
   for (const [component, files] of Object.entries(componentMap)) {
     output[component] = [...files];
   }
-  
+
   // Generate statistics
   const totalImports = Object.values(output).reduce((sum, files) => sum + files.length, 0);
   const totalComponents = Object.keys(output).length;
-  
+
   if (verbose) {
-    console.log(`Analysis complete - Found ${totalComponents} components with ${totalImports} total imports across ${allFiles.length} files`);
+    console.log(
+      `Analysis complete - Found ${totalComponents} components with ${totalImports} total imports across ${allFiles.length} files`,
+    );
   }
-  
+
   return {
     summary: {
       library: lib,
       componentsFound: totalComponents,
       totalImports: totalImports,
-      filesScanned: allFiles.length
+      filesScanned: allFiles.length,
     },
-    components: output
+    components: output,
   };
 }

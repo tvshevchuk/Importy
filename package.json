@@ -25,10 +25,17 @@
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "lint": "biome lint src/",
+    "lint:fix": "biome lint --write src/",
+    "format": "biome format src/",
+    "format:fix": "biome format --write src/",
+    "check": "biome check src/",
+    "check:fix": "biome check --write src/"
   },
   "devDependencies": {
     "@babel/types": "7.27.3",
+    "@biomejs/biome": "1.9.4",
     "@types/babel__traverse": "7.20.7",
     "@types/node": "22.15.29",
     "ts-node": "10.9.2",
