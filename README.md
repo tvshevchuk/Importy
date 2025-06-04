@@ -4,7 +4,7 @@ A powerful CLI tool for analyzing JavaScript/TypeScript imports from libraries.
 
 [![npm version](https://img.shields.io/npm/v/importy.svg)](https://www.npmjs.com/package/importy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/yourusername/importy)
+[![Publish to npm (pnpm)](https://github.com/tvshevchuk/Importy/actions/workflows/publish.yml/badge.svg)](https://github.com/tvshevchuk/Importy/actions/workflows/publish.yml)
 
 ## Overview
 
