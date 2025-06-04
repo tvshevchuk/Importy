@@ -1,6 +1,6 @@
 {
   "name": "importy",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "A CLI tool for analyzing JavaScript/TypeScript imports from libraries",
   "repository": {
     "type": "git",
