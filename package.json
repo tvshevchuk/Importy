@@ -1,6 +1,6 @@
 {
   "name": "importy",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A CLI tool for analyzing JavaScript/TypeScript imports from libraries",
   "homepage": "https://tvshevchuk.github.io/Importy/",
   "bugs": {

@@ -43,7 +43,7 @@ interface Summary {
     "totalImports": 23,
     "filesScanned": 42,
     "processingTime": 1247,
-    "timestamp": "2024-01-15T10:30:00.000Z"
+    "timestamp": "2025-06-05T15:48:26.000Z"
   }
 }
 ```

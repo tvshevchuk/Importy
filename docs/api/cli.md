@@ -212,7 +212,7 @@ When no `--output` is specified, results are printed to stdout as JSON:
     "totalImports": 12,
     "filesScanned": 42,
     "processingTime": 1247,
-    "timestamp": "2024-01-15T10:30:00.000Z"
+    "timestamp": "2025-06-05T15:48:26.000Z"
   },
   "components": {
     "useState": [

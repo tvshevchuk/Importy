@@ -5,7 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.1] - 2025-06-04
+## [0.1.2] - 2025-06-05
+
+### 🔧 Fixed
+- **Documentation UI**: Fixed TypeScript word-break issue in hero text and titles
+- **Date Consistency**: Updated all 2024 dates to current 2025 dates across documentation
+- **GitHub Actions**: Fixed pnpm compatibility issues with dependency caching
+- **CI/CD Pipeline**: Resolved "Dependencies lock file is not found" errors
+
+### 📖 Documentation
+- **Custom Theme**: Added VitePress custom theme with improved typography
+- **CSS Improvements**: Enhanced text rendering and mobile responsiveness
+- **Changelog Updates**: Synchronized all timestamps and examples with current date
+
+### 🚀 CI/CD
+- **pnpm Integration**: Migrated from manual pnpm installation to `pnpm/action-setup@v2`
+- **Cache Optimization**: Proper pnpm lock file detection and caching
+- **Build Stability**: All workflows now run successfully with consistent pnpm version
+
+## [0.1.1] - 2025-06-05
 
 ### 🎉 First Stable Release
 

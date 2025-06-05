@@ -231,7 +231,7 @@ Creates `analysis.json` with the results.
 importy --dir ./src --lib react --output "analysis-$(date +%Y%m%d).json"
 ```
 
-Creates files like `analysis-20240115.json`.
+Creates files like `analysis-20250605.json`.
 
 ### Multiple Libraries
 

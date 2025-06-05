@@ -1,0 +1,99 @@
+/* Custom styles for Importy documentation */
+
+/* Fix TypeScript word-break issue */
+.VPHero .name,
+.VPHero .text,
+.VPHero .tagline,
+h1, h2, h3, h4, h5, h6,
+.vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4, .vp-doc h5, .vp-doc h6 {
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+  hyphens: none !important;
+}
+
+/* Prevent breaking of "TypeScript" and other technical terms */
+.VPHero .text,
+.VPHero .tagline,
+.vp-doc p,
+.vp-doc li {
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+/* Specific fix for hero text - prevent TypeScript from breaking */
+.VPHero .text {
+  white-space: nowrap;
+  word-break: keep-all !important;
+}
+
+/* Ensure technical terms don't break */
+code,
+.vp-code,
+.language-bash,
+.language-json,
+.language-typescript,
+.language-javascript {
+  word-break: normal !important;
+  white-space: pre-wrap !important;
+}
+
+/* Fix for inline code */
+p code,
+li code {
+  word-break: normal !important;
+  white-space: nowrap !important;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 768px) {
+  .VPHero .text {
+    white-space: normal;
+    word-break: normal;
+    overflow-wrap: break-word;
+    line-height: 1.2;
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+  }
+}
+
+/* Additional mobile breakpoint for very small screens */
+@media (max-width: 480px) {
+  .VPHero .text {
+    font-size: clamp(1.2rem, 5vw, 1.8rem);
+  }
+}
+
+/* Improve readability */
+.vp-doc {
+  word-spacing: normal;
+  letter-spacing: normal;
+}
+
+/* Fix for feature cards */
+.VPFeature .title {
+  word-break: normal !important;
+  overflow-wrap: break-word !important;
+}
+
+/* Fix for navigation */
+.VPNav .VPNavBarTitle .title {
+  word-break: normal !important;
+}
+
+/* Fix for sidebar */
+.VPSidebar .title {
+  word-break: normal !important;
+}
+
+/* Ensure consistent text rendering across browsers */
+* {
+  -webkit-font-feature-settings: "kern" 1;
+  font-feature-settings: "kern" 1;
+  -webkit-font-kerning: normal;
+  font-kerning: normal;
+}
+
+/* Prevent text overflow issues */
+.VPContent {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
