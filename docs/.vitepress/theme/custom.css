@@ -1,29 +1,35 @@
 /* Custom styles for Importy documentation */
 
-/* Fix TypeScript word-break issue */
-.VPHero .name,
-.VPHero .text,
-.VPHero .tagline,
+/* Fix TypeScript word-break issue with simple CSS */
+.VPHero .text {
+  word-wrap: normal;
+}
+
+/* Responsive adjustment for mobile - allow controlled breaking */
+@media (max-width: 640px) {
+  .VPHero .text {
+    word-wrap: break-word;
+    word-spacing: 0.2em;
+  }
+  
+  /* Prevent breaking in the middle of TypeScript */
+  .VPHero .text::after {
+    content: "";
+    display: inline-block;
+    width: 0;
+  }
+}
+
+/* Ensure proper text rendering for documentation */
 h1, h2, h3, h4, h5, h6,
 .vp-doc h1, .vp-doc h2, .vp-doc h3, .vp-doc h4, .vp-doc h5, .vp-doc h6 {
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
-  hyphens: none !important;
+  overflow-wrap: break-word;
+  hyphens: none;
 }
 
-/* Prevent breaking of "TypeScript" and other technical terms */
-.VPHero .text,
-.VPHero .tagline,
 .vp-doc p,
 .vp-doc li {
-  word-break: normal;
   overflow-wrap: break-word;
-}
-
-/* Specific fix for hero text - prevent TypeScript from breaking */
-.VPHero .text {
-  white-space: nowrap;
-  word-break: keep-all !important;
 }
 
 /* Ensure technical terms don't break */
@@ -44,24 +50,6 @@ li code {
   white-space: nowrap !important;
 }
 
-/* Responsive adjustments for mobile */
-@media (max-width: 768px) {
-  .VPHero .text {
-    white-space: normal;
-    word-break: normal;
-    overflow-wrap: break-word;
-    line-height: 1.2;
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-  }
-}
-
-/* Additional mobile breakpoint for very small screens */
-@media (max-width: 480px) {
-  .VPHero .text {
-    font-size: clamp(1.2rem, 5vw, 1.8rem);
-  }
-}
-
 /* Improve readability */
 .vp-doc {
   word-spacing: normal;
@@ -70,18 +58,17 @@ li code {
 
 /* Fix for feature cards */
 .VPFeature .title {
-  word-break: normal !important;
-  overflow-wrap: break-word !important;
+  overflow-wrap: break-word;
 }
 
 /* Fix for navigation */
 .VPNav .VPNavBarTitle .title {
-  word-break: normal !important;
+  overflow-wrap: break-word;
 }
 
 /* Fix for sidebar */
 .VPSidebar .title {
-  word-break: normal !important;
+  overflow-wrap: break-word;
 }
 
 /* Ensure consistent text rendering across browsers */
