@@ -8,6 +8,12 @@ A powerful CLI tool for analyzing JavaScript/TypeScript imports from libraries.
 
 > **Version 0.1.1** - First stable release! 🎉 See [CHANGELOG.md](CHANGELOG.md) for details.
 
+## 🎬 Live Demo
+
+![Importy Demo](public/improved-demo-small.gif)
+
+*See Importy in action analyzing a React project! [View full demo →](DEMO.md)*
+
 ## Overview
 
 Importy scans your codebase to identify and analyze imports from specific libraries. It helps you:
