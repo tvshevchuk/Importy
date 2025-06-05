@@ -33,13 +33,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: npm
+          cache: 'pnpm'
+          cache-dependency-path: 'pnpm-lock.yaml'
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Copy assets to docs public folder
         run: |
@@ -49,7 +53,7 @@ jobs:
           cp public/improved-demo-small.gif docs/public/
 
       - name: Build with VitePress
-        run: npm run docs:build
+        run: pnpm run docs:build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
