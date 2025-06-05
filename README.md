@@ -8,6 +8,15 @@ A powerful CLI tool for analyzing JavaScript/TypeScript imports from libraries.
 
 > **Version 0.1.1** - First stable release! 🎉 See [CHANGELOG.md](CHANGELOG.md) for details.
 
+## 📖 Documentation
+
+**[📚 Complete Documentation →](https://tvshevchuk.github.io/Importy/)**
+
+- [🚀 Getting Started Guide](https://tvshevchuk.github.io/Importy/guide/getting-started)
+- [📋 API Reference](https://tvshevchuk.github.io/Importy/api/cli)
+- [💡 Examples & Use Cases](https://tvshevchuk.github.io/Importy/examples/basic-usage)
+- [🤝 Contributing Guide](https://tvshevchuk.github.io/Importy/contributing)
+
 ## 🎬 Live Demo
 
 ![Importy Demo](public/improved-demo-small.gif)

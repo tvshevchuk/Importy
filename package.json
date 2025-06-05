@@ -2,7 +2,7 @@
   "name": "importy",
   "version": "0.1.1",
   "description": "A CLI tool for analyzing JavaScript/TypeScript imports from libraries",
-  "homepage": "https://github.com/tvshevchuk/Importy#readme",
+  "homepage": "https://tvshevchuk.github.io/Importy/",
   "bugs": {
     "url": "https://github.com/tvshevchuk/Importy/issues"
   },
@@ -49,7 +49,10 @@
     "release:major": "./scripts/release.sh major",
     "release:check": "./scripts/release.sh --check",
     "release:manual": "./scripts/release.sh --manual",
-    "prerelease": "npm run test && npm run check"
+    "prerelease": "npm run test && npm run check",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@babel/types": "7.27.3",
@@ -59,6 +62,7 @@
     "ts-node": "10.9.2",
     "tsup": "8.5.0",
     "typescript": "5.8.3",
+    "vitepress": "^1.6.3",
     "vitest": "1.6.1"
   },
   "dependencies": {
