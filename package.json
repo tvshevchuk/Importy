@@ -52,11 +52,7 @@
     "prerelease": "npm run test && npm run check",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs",
-    "docs:seo": "node scripts/generate-sitemap.js",
-    "docs:build:seo": "npm run docs:seo && npm run docs:build",
-    "docs:validate": "node scripts/generate-sitemap.js && echo 'SEO validation complete'",
-    "predocs:build": "npm run docs:seo"
+    "docs:preview": "vitepress preview docs"
   },
   "devDependencies": {
     "@babel/types": "7.27.3",
