@@ -13,22 +13,10 @@
       "softwareVersion": "0.1.2",
       "datePublished": "2025-01-27",
       "dateModified": "2025-01-27",
-      "operatingSystem": [
-        "Windows",
-        "macOS",
-        "Linux",
-        "Unix"
-      ],
-      "applicationCategory": [
-        "DeveloperApplication",
-        "SoftwareApplication"
-      ],
+      "operatingSystem": ["Windows", "macOS", "Linux", "Unix"],
+      "applicationCategory": ["DeveloperApplication", "SoftwareApplication"],
       "applicationSubCategory": "Code Analysis Tool",
-      "programmingLanguage": [
-        "JavaScript",
-        "TypeScript",
-        "Node.js"
-      ],
+      "programmingLanguage": ["JavaScript", "TypeScript", "Node.js"],
       "runtimePlatform": "Node.js",
       "softwareRequirements": "Node.js >= 18.0.0",
       "memoryRequirements": "Minimum 512MB RAM",
@@ -45,9 +33,7 @@
         "@type": "Person",
         "name": "Taras Shevchuk",
         "url": "https://github.com/tvshevchuk",
-        "sameAs": [
-          "https://github.com/tvshevchuk"
-        ]
+        "sameAs": ["https://github.com/tvshevchuk"]
       },
       "maintainer": {
         "@type": "Person",
@@ -55,7 +41,6 @@
         "url": "https://github.com/tvshevchuk"
       },
       "codeRepository": "https://github.com/tvshevchuk/Importy",
-      "downloadUrl": "https://www.npmjs.com/package/importy",
       "screenshot": "https://tvshevchuk.github.io/Importy/improved-demo.gif",
       "image": "https://tvshevchuk.github.io/Importy/importy.png",
       "logo": {

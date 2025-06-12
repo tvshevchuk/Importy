@@ -21,7 +21,6 @@ hero:
     - theme: alt
       text: Install via npm
       link: https://www.npmjs.com/package/importy
----
 
 features:
   - icon: 🔍
@@ -75,7 +74,7 @@ importy --dir ./src --lib @mui/material --output report.json
 ### 🎯 **Smart Dependency Auditing**
 Gain deep insights into which specific functions, components, and modules from large libraries like React, Lodash, or Material-UI are actually being used in your codebase. Make informed decisions about bundle optimization and library migration strategies.
 
-### 📈 **Strategic Migration Planning** 
+### 📈 **Strategic Migration Planning**
 Get precise visibility into component and function usage patterns across your entire project. Essential for planning major library upgrades, refactoring initiatives, or transitioning between different UI frameworks.
 
 ### 🚀 **Intelligent Bundle Optimization**
@@ -161,7 +160,7 @@ See exactly what Importy discovers in your codebase with detailed JSON output:
 ---
 
 <div style="text-align: center; margin: 3rem 0; color: #666;">
-  Made with ❤️ by <a href="https://github.com/tvshevchuk" rel="noopener" target="_blank">Taras Shevchuk</a> | 
-  <a href="https://github.com/tvshevchuk/Importy/blob/main/LICENSE" rel="noopener" target="_blank">MIT License</a> | 
+  Made with ❤️ by <a href="https://github.com/tvshevchuk" rel="noopener" target="_blank">Taras Shevchuk</a> |
+  <a href="https://github.com/tvshevchuk/Importy/blob/main/LICENSE" rel="noopener" target="_blank">MIT License</a> |
   <a href="https://www.npmjs.com/package/importy" rel="noopener" target="_blank">npm package</a>
 </div>

@@ -32,7 +32,7 @@ export default defineConfig({
       { text: "API Reference", link: "/api/cli" },
       { text: "Examples", link: "/examples/basic-usage" },
       {
-        text: "v0.1.1",
+        text: "v0.1.2",
         items: [
           { text: "Changelog", link: "/changelog" },
           { text: "Contributing", link: "/contributing" },
@@ -50,15 +50,6 @@ export default defineConfig({
             { text: "Installation", link: "/guide/installation" },
             { text: "Quick Start", link: "/guide/getting-started" },
             { text: "Configuration", link: "/guide/configuration" },
-          ],
-        },
-        {
-          text: "Advanced",
-          collapsed: false,
-          items: [
-            { text: "Performance", link: "/guide/performance" },
-            { text: "CI/CD Integration", link: "/guide/ci-cd" },
-            { text: "Troubleshooting", link: "/guide/troubleshooting" },
           ],
         },
       ],
@@ -80,7 +71,6 @@ export default defineConfig({
           items: [
             { text: "Basic Usage", link: "/examples/basic-usage" },
             { text: "Advanced Usage", link: "/examples/advanced-usage" },
-            { text: "Real-world Scenarios", link: "/examples/real-world" },
           ],
         },
       ],
