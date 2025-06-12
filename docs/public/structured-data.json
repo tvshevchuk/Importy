@@ -1,0 +1,353 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://tvshevchuk.github.io/Importy/#software",
+      "name": "Importy",
+      "alternateName": "Importy CLI",
+      "description": "A powerful CLI tool for analyzing JavaScript/TypeScript imports from libraries. Perfect for dependency auditing, bundle optimization, migration planning, and code analysis.",
+      "url": "https://tvshevchuk.github.io/Importy/",
+      "downloadUrl": "https://www.npmjs.com/package/importy",
+      "installUrl": "https://www.npmjs.com/package/importy",
+      "softwareVersion": "0.1.2",
+      "datePublished": "2025-01-27",
+      "dateModified": "2025-01-27",
+      "operatingSystem": [
+        "Windows",
+        "macOS",
+        "Linux",
+        "Unix"
+      ],
+      "applicationCategory": [
+        "DeveloperApplication",
+        "SoftwareApplication"
+      ],
+      "applicationSubCategory": "Code Analysis Tool",
+      "programmingLanguage": [
+        "JavaScript",
+        "TypeScript",
+        "Node.js"
+      ],
+      "runtimePlatform": "Node.js",
+      "softwareRequirements": "Node.js >= 18.0.0",
+      "memoryRequirements": "Minimum 512MB RAM",
+      "storageRequirements": "50MB available disk space",
+      "processorRequirements": "Any modern CPU",
+      "fileSize": "2.5MB",
+      "license": "https://github.com/tvshevchuk/Importy/blob/main/LICENSE",
+      "copyrightHolder": {
+        "@type": "Person",
+        "name": "Taras Shevchuk",
+        "url": "https://github.com/tvshevchuk"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Taras Shevchuk",
+        "url": "https://github.com/tvshevchuk",
+        "sameAs": [
+          "https://github.com/tvshevchuk"
+        ]
+      },
+      "maintainer": {
+        "@type": "Person",
+        "name": "Taras Shevchuk",
+        "url": "https://github.com/tvshevchuk"
+      },
+      "codeRepository": "https://github.com/tvshevchuk/Importy",
+      "downloadUrl": "https://www.npmjs.com/package/importy",
+      "screenshot": "https://tvshevchuk.github.io/Importy/improved-demo.gif",
+      "image": "https://tvshevchuk.github.io/Importy/importy.png",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://tvshevchuk.github.io/Importy/importy.png",
+        "width": 200,
+        "height": 200
+      },
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "category": "Free Software"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "bestRating": "5",
+        "worstRating": "1",
+        "ratingCount": "1"
+      },
+      "keywords": [
+        "javascript",
+        "typescript",
+        "import analyzer",
+        "cli tool",
+        "dependency analysis",
+        "bundle optimization",
+        "react imports",
+        "lodash analysis",
+        "code analysis",
+        "developer tools",
+        "ast parsing",
+        "static analysis",
+        "tree shaking",
+        "migration planning",
+        "ci cd integration"
+      ],
+      "featureList": [
+        "Deep import analysis for JavaScript/TypeScript projects",
+        "Parallel processing for fast analysis of large codebases",
+        "Comprehensive JSON reports with usage statistics",
+        "Flexible glob patterns for targeted file scanning",
+        "CI/CD integration for automated dependency auditing",
+        "Support for React, Vue, Angular, and other frameworks",
+        "Bundle optimization recommendations",
+        "Migration planning assistance",
+        "Verbose logging and debugging options",
+        "Cross-platform compatibility"
+      ],
+      "softwareHelp": {
+        "@type": "WebPage",
+        "url": "https://tvshevchuk.github.io/Importy/guide/getting-started"
+      },
+      "releaseNotes": "https://github.com/tvshevchuk/Importy/blob/main/CHANGELOG.md",
+      "supportingData": {
+        "@type": "Dataset",
+        "name": "Import Analysis Results",
+        "description": "JSON output containing detailed import analysis results"
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://tvshevchuk.github.io/Importy/#website",
+      "url": "https://tvshevchuk.github.io/Importy/",
+      "name": "Importy Documentation",
+      "description": "Official documentation for Importy - A powerful CLI tool for analyzing JavaScript/TypeScript imports",
+      "inLanguage": "en-US",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "GitHub Pages",
+        "url": "https://pages.github.com"
+      },
+      "about": {
+        "@id": "https://tvshevchuk.github.io/Importy/#software"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Taras Shevchuk",
+        "url": "https://github.com/tvshevchuk"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Taras Shevchuk",
+        "url": "https://github.com/tvshevchuk"
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://tvshevchuk.github.io/Importy/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "mainEntity": {
+        "@id": "https://tvshevchuk.github.io/Importy/#software"
+      }
+    },
+    {
+      "@type": "TechArticle",
+      "@id": "https://tvshevchuk.github.io/Importy/#documentation",
+      "headline": "Importy Documentation - JavaScript/TypeScript Import Analyzer",
+      "description": "Complete guide to using Importy for analyzing JavaScript and TypeScript imports, including installation, configuration, and advanced usage examples.",
+      "url": "https://tvshevchuk.github.io/Importy/",
+      "datePublished": "2025-01-27",
+      "dateModified": "2025-01-27",
+      "author": {
+        "@type": "Person",
+        "name": "Taras Shevchuk",
+        "url": "https://github.com/tvshevchuk"
+      },
+      "publisher": {
+        "@type": "Person",
+        "name": "Taras Shevchuk",
+        "url": "https://github.com/tvshevchuk"
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://tvshevchuk.github.io/Importy/"
+      },
+      "articleSection": [
+        "Installation Guide",
+        "Quick Start",
+        "Configuration",
+        "API Reference",
+        "Examples",
+        "Performance Tips",
+        "CI/CD Integration",
+        "Troubleshooting"
+      ],
+      "about": [
+        {
+          "@type": "Thing",
+          "name": "JavaScript Import Analysis"
+        },
+        {
+          "@type": "Thing",
+          "name": "TypeScript Static Analysis"
+        },
+        {
+          "@type": "Thing",
+          "name": "Dependency Auditing"
+        },
+        {
+          "@type": "Thing",
+          "name": "Bundle Optimization"
+        }
+      ],
+      "teaches": [
+        "How to analyze JavaScript/TypeScript imports",
+        "Dependency auditing best practices",
+        "Bundle optimization techniques",
+        "Migration planning strategies",
+        "CI/CD integration for code analysis"
+      ],
+      "educationalLevel": "Intermediate to Advanced",
+      "learningResourceType": "Documentation",
+      "interactivityType": "Active"
+    },
+    {
+      "@type": "HowTo",
+      "@id": "https://tvshevchuk.github.io/Importy/#howto",
+      "name": "How to Analyze JavaScript/TypeScript Imports with Importy",
+      "description": "Step-by-step guide to using Importy CLI tool for analyzing imports in your JavaScript and TypeScript projects",
+      "image": "https://tvshevchuk.github.io/Importy/improved-demo.gif",
+      "totalTime": "PT5M",
+      "estimatedCost": {
+        "@type": "MonetaryAmount",
+        "currency": "USD",
+        "value": "0"
+      },
+      "supply": [
+        {
+          "@type": "HowToSupply",
+          "name": "Node.js runtime environment (version 18 or higher)"
+        },
+        {
+          "@type": "HowToSupply",
+          "name": "JavaScript or TypeScript project with imports"
+        }
+      ],
+      "tool": [
+        {
+          "@type": "HowToTool",
+          "name": "Importy CLI tool"
+        },
+        {
+          "@type": "HowToTool",
+          "name": "Terminal or Command Prompt"
+        }
+      ],
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Install Importy",
+          "text": "Install Importy globally using npm: npm install -g importy",
+          "url": "https://tvshevchuk.github.io/Importy/guide/installation"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Navigate to Project Directory",
+          "text": "Open terminal and navigate to your JavaScript/TypeScript project directory"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Run Basic Analysis",
+          "text": "Execute: importy --dir ./src --lib react to analyze React imports",
+          "url": "https://tvshevchuk.github.io/Importy/examples/basic-usage"
+        },
+        {
+          "@type": "HowToStep",
+          "position": 4,
+          "name": "Review Results",
+          "text": "Examine the generated report showing which components and functions are imported and their locations",
+          "url": "https://tvshevchuk.github.io/Importy/api/output-format"
+        }
+      ]
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://tvshevchuk.github.io/Importy/#organization",
+      "name": "Importy Project",
+      "url": "https://tvshevchuk.github.io/Importy/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://tvshevchuk.github.io/Importy/importy.png"
+      },
+      "founder": {
+        "@type": "Person",
+        "name": "Taras Shevchuk",
+        "url": "https://github.com/tvshevchuk"
+      },
+      "foundingDate": "2025-01-27",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Support",
+        "url": "https://github.com/tvshevchuk/Importy/issues"
+      },
+      "sameAs": [
+        "https://github.com/tvshevchuk/Importy",
+        "https://www.npmjs.com/package/importy"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://tvshevchuk.github.io/Importy/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Importy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Importy is a powerful CLI tool for analyzing JavaScript/TypeScript imports from libraries. It helps developers identify which components, functions, and modules are actually being used in their codebase."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I install Importy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can install Importy globally using npm: npm install -g importy. Requires Node.js version 18 or higher."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What file types does Importy support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Importy supports JavaScript (.js), TypeScript (.ts), JSX (.jsx), and TSX (.tsx) files. It can analyze ES6 imports, CommonJS requires, and dynamic imports."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I use Importy in CI/CD pipelines?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Importy is designed for CI/CD integration. It provides JSON output, proper exit codes, and can be automated for dependency auditing and code quality checks."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Importy free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Importy is completely free and open-source software released under the MIT License. You can use it for personal and commercial projects."
+          }
+        }
+      ]
+    }
+  ]
+}

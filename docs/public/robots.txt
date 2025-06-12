@@ -1,0 +1,31 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://tvshevchuk.github.io/Importy/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Disallow crawling of build artifacts and cache
+Disallow: /.vitepress/
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /*.json$
+Disallow: /*.log$
+
+# Allow important documentation files
+Allow: /guide/
+Allow: /api/
+Allow: /examples/
+Allow: /changelog
+Allow: /contributing
+
+# Allow static assets
+Allow: /*.css
+Allow: /*.js
+Allow: /*.png
+Allow: /*.jpg
+Allow: /*.gif
+Allow: /*.ico
+Allow: /*.svg
