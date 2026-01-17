@@ -8,5 +8,5 @@ export default defineConfig({
   banner: {
     js: "#!/usr/bin/env node",
   },
-  target: "node18",
+  target: "node24",
 });
