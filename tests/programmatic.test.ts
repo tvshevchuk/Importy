@@ -100,35 +100,29 @@ describe("Importy Programmatic API", () => {
     expect(result.summary.filesScanned).toBeGreaterThan(0);
     expect(result.components).toBeDefined();
 
-    // Just check that we got a result with components and summary
-    expect(result.components).toBeDefined();
-    expect(result.summary).toBeDefined();
-    expect(result.summary.filesScanned).toBeGreaterThan(0);
+    // Check that all components were found
+    const components = result.components;
+    expect(components.Button).toBeDefined();
+    expect(components.Card).toBeDefined();
+    expect(components.Navbar).toBeDefined();
+    expect(components.Container).toBeDefined();
 
-    // Uncomment these when the parser is working correctly
-    // const components = result.components;
-    // expect(components.Button).toBeDefined();
-    // expect(components.Card).toBeDefined();
-    // expect(components.Navbar).toBeDefined();
-    // expect(components.Container).toBeDefined();
+    // Check file counts
+    expect(components.Button.length).toBe(1);
+    expect(components.Card.length).toBe(1);
+    expect(components.Navbar.length).toBe(1);
+    expect(components.Container.length).toBe(2); // Used in two files
 
-    // // Check file counts
-    // expect(components.Button.length).toBe(1);
-    // expect(components.Card.length).toBe(1);
-    // expect(components.Navbar.length).toBe(1);
-    // expect(components.Container.length).toBe(2); // Used in two files
-
-    // Uncomment these when the parser is working correctly
-    // // Verify the correct files are listed
-    // expect(components.Button[0]).toContain('app.tsx');
-    // expect(components.Card[0]).toContain('app.tsx');
-    // expect(components.Navbar[0]).toContain('header.tsx');
-    // expect(components.Container).toEqual(
-    //   expect.arrayContaining([
-    //     expect.stringContaining('header.tsx'),
-    //     expect.stringContaining('footer.tsx')
-    //   ])
-    // );
+    // Verify the correct files are listed
+    expect(components.Button[0]).toContain("app.tsx");
+    expect(components.Card[0]).toContain("app.tsx");
+    expect(components.Navbar[0]).toContain("header.tsx");
+    expect(components.Container).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("header.tsx"),
+        expect.stringContaining("footer.tsx"),
+      ]),
+    );
   });
 
   it("should handle files with syntax errors gracefully", async () => {
@@ -160,53 +154,44 @@ describe("Importy Programmatic API", () => {
     expect(result.summary).toBeDefined();
     expect(result.summary.filesScanned).toBeGreaterThan(0);
 
-    // Just verify we got a result without crashing
-    expect(result.components).toBeDefined();
-    expect(result.summary).toBeDefined();
-
-    // Uncomment these when the parser is working correctly
-    // // Check for components that should still be found
-    // expect(result.components.Button).toBeDefined();
-    // expect(result.components.Card).toBeDefined();
+    // Check for components that should still be found
+    expect(result.components.Button).toBeDefined();
+    expect(result.components.Card).toBeDefined();
   });
 
   it("should handle filtering with include/exclude patterns", async () => {
-    // Run analysis with include pattern
+    // Run analysis with include pattern (only src directory)
     const resultWithInclude = await analyzeImports({
       dir: testDirPath,
       lib: "ui-library",
       include: "**/src/**",
     });
 
-    // Just verify we got a result without crashing
     expect(resultWithInclude.components).toBeDefined();
     expect(resultWithInclude.summary).toBeDefined();
 
-    // Uncomment these when the parser is working correctly
-    // // Should only find components from src directory
-    // expect(resultWithInclude.components.Button).toBeDefined();
-    // expect(resultWithInclude.components.Card).toBeDefined();
-    // expect(resultWithInclude.components.Navbar).toBeUndefined();
-    // expect(resultWithInclude.components.Container).toBeDefined(); // But only in src
-    // expect(resultWithInclude.components.Container.length).toBe(0); // Since Container is not in src
+    // Should only find components from src directory (Button, Card from app.tsx)
+    expect(resultWithInclude.components.Button).toBeDefined();
+    expect(resultWithInclude.components.Card).toBeDefined();
+    // Navbar and Container are only in components directory, so should not be found
+    expect(resultWithInclude.components.Navbar).toBeUndefined();
+    expect(resultWithInclude.components.Container).toBeUndefined();
 
-    // Run analysis with exclude pattern
+    // Run analysis with exclude pattern (exclude components directory)
     const resultWithExclude = await analyzeImports({
       dir: testDirPath,
       lib: "ui-library",
       exclude: "**/components/**",
     });
 
-    // Just verify we got a result without crashing
     expect(resultWithExclude.components).toBeDefined();
     expect(resultWithExclude.summary).toBeDefined();
 
-    // Uncomment these when the parser is working correctly
-    // // Should not find components from components directory
-    // expect(resultWithExclude.components.Button).toBeDefined();
-    // expect(resultWithExclude.components.Card).toBeDefined();
-    // expect(resultWithExclude.components.Navbar).toBeUndefined();
-    // expect(resultWithExclude.components.Container).toBeDefined();
-    // expect(resultWithExclude.components.Container.every(path => !path.includes('components'))).toBe(true);
+    // Should find Button and Card from src/app.tsx
+    expect(resultWithExclude.components.Button).toBeDefined();
+    expect(resultWithExclude.components.Card).toBeDefined();
+    // Should not find Navbar and Container (only in components directory)
+    expect(resultWithExclude.components.Navbar).toBeUndefined();
+    expect(resultWithExclude.components.Container).toBeUndefined();
   });
 });

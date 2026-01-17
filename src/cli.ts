@@ -4,8 +4,10 @@ import path from "node:path";
 import * as parser from "@babel/parser";
 import _traverse from "@babel/traverse";
 import type { File, ImportDeclaration } from "@babel/types";
+import picomatch from "picomatch";
 
-const traverse = _traverse.default;
+// Handle ESM/CJS interop for @babel/traverse
+const traverse = typeof _traverse === "function" ? _traverse : _traverse.default;
 
 // Types
 export interface ImportMatch {
@@ -56,7 +58,7 @@ function getAllFiles(
         const stat = fs.statSync(fullPath);
 
         // Skip directories that match exclude pattern
-        if (excludePattern && stat.isDirectory() && minimatch(fullPath, excludePattern)) {
+        if (excludePattern && stat.isDirectory() && matchesPattern(fullPath, excludePattern)) {
           if (verbose) console.log(`Skipping excluded directory: ${fullPath}`);
           continue;
         }
@@ -65,8 +67,8 @@ function getAllFiles(
           getAllFiles(fullPath, arrayOfFiles, includePattern, excludePattern, verbose);
         } else if (isJavaScriptFile(fullPath)) {
           // Check include/exclude patterns for files
-          const shouldInclude = !includePattern || minimatch(fullPath, includePattern);
-          const shouldExclude = excludePattern && minimatch(fullPath, excludePattern);
+          const shouldInclude = !includePattern || matchesPattern(fullPath, includePattern);
+          const shouldExclude = excludePattern && matchesPattern(fullPath, excludePattern);
 
           if (shouldInclude && !shouldExclude) {
             arrayOfFiles.push(fullPath);
@@ -90,19 +92,10 @@ function getAllFiles(
   return arrayOfFiles;
 }
 
-function minimatch(filePath: string, pattern: string): boolean {
+function matchesPattern(filePath: string, pattern: string): boolean {
   try {
-    // Simple glob pattern matching implementation
-    const regExpPattern = pattern
-      .replace(/\./g, "\\.")
-      .replace(/\*\*/g, "{{GLOBSTAR}}")
-      .replace(/\*/g, "[^/]*")
-      .replace(/\?/g, "[^/]")
-      .replace(/{{GLOBSTAR}}/g, ".*");
-
-    const regex = new RegExp(`^${regExpPattern}$`, "i");
-    const result = regex.test(filePath);
-    return result;
+    const isMatch = picomatch(pattern, { dot: true });
+    return isMatch(filePath);
   } catch (_error) {
     console.warn(`Invalid pattern: ${pattern}`);
     return false;
@@ -186,7 +179,6 @@ function extractImportsFromFile(filePath: string, targetLib: string): ImportMatc
     }
 
     const matches: ImportMatch[] = [];
-    // const lines = code.split("\n"); // Kept for potential future use
 
     traverse(ast, {
       ImportDeclaration(path) {

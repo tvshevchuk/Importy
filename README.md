@@ -6,7 +6,7 @@ A powerful CLI tool for analyzing JavaScript/TypeScript imports from libraries.
 [![npm version](https://img.shields.io/npm/v/importy.svg)](https://www.npmjs.com/package/importy)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **Version 0.1.1** - First stable release! 🎉 See [CHANGELOG.md](CHANGELOG.md) for details.
+> **Version 0.1.2** - See [CHANGELOG.md](CHANGELOG.md) for details.
 
 ## 📖 Documentation
 
@@ -45,7 +45,7 @@ yarn global add importy
 pnpm add -g importy
 
 # Verify installation
-importy --version  # Should output: 0.1.0
+importy --version  # Should output: 0.1.2
 ```
 
 ## Usage
@@ -139,8 +139,8 @@ Importy uses parallel processing with promises, making it efficient even for lar
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/importy.git
-cd importy
+git clone https://github.com/tvshevchuk/Importy.git
+cd Importy
 
 # Install dependencies
 npm install
