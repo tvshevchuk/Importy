@@ -1,4 +1,4 @@
-name: Manual Publish
+name: Publish to npm
 
 on:
   workflow_dispatch:
@@ -12,10 +12,17 @@ on:
         required: false
         default: false
         type: boolean
+  workflow_call:
+    inputs:
+      dry_run:
+        description: 'Perform a dry run without actually publishing'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
-  manual-publish:
-    name: Manual publish to npm
+  publish:
+    name: Publish to npm
     runs-on: ubuntu-latest
     environment:
       name: releases
@@ -50,26 +57,20 @@ jobs:
         run: pnpm build
 
       - name: Check version
+        if: github.event.inputs.version != ''
         run: |
-          CURRENT_VERSION=$(node -p "require('./package.json').version")
           INPUT_VERSION="${{ github.event.inputs.version }}"
-          
-          if [ -n "$INPUT_VERSION" ]; then
-            echo "Publishing specified version: $INPUT_VERSION"
-            # Update package.json version if specified
-            npm version $INPUT_VERSION --no-git-tag-version
-          else
-            echo "Publishing current version: $CURRENT_VERSION"
-          fi
+          echo "Publishing specified version: $INPUT_VERSION"
+          npm version $INPUT_VERSION --no-git-tag-version
 
       - name: Dry run publish
-        if: github.event.inputs.dry_run == 'true'
+        if: inputs.dry_run == true
         run: |
           echo "🧪 Performing dry run..."
           pnpm publish --dry-run --no-git-checks
 
       - name: Publish to npm with provenance
-        if: github.event.inputs.dry_run != 'true'
+        if: inputs.dry_run != true
         run: |
           echo "📦 Publishing to npm..."
           pnpm publish --no-git-checks --provenance --access public
@@ -79,7 +80,7 @@ jobs:
       - name: Success notification
         run: |
           VERSION=$(node -p "require('./package.json').version")
-          if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+          if [ "${{ inputs.dry_run }}" == "true" ]; then
             echo "✅ Dry run completed successfully for version $VERSION"
           else
             echo "🎉 Successfully published version $VERSION to npm"

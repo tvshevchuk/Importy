@@ -17,7 +17,6 @@ jobs:
     outputs:
       version_changed: ${{ steps.check.outputs.changed }}
       new_version: ${{ steps.check.outputs.version }}
-      tag_exists: ${{ steps.check.outputs.tag_exists }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,13 +38,6 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
 
-          # Check if tag already exists
-          if git tag | grep -q "^v$CURRENT_VERSION$"; then
-            echo "tag_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "tag_exists=false" >> $GITHUB_OUTPUT
-          fi
-
   release:
     name: Create Release
     runs-on: ubuntu-latest
@@ -55,35 +47,11 @@ jobs:
       name: releases
     permissions:
       contents: write
-      id-token: write
 
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Install pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10.11.1
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          registry-url: "https://registry.npmjs.org/"
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Run quality checks
-        run: |
-          pnpm run check
-          pnpm test
-
-      - name: Build
-        run: pnpm build
 
       - name: Update changelog
         run: |
@@ -137,16 +105,19 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Publish to npm with provenance
-        run: pnpm publish --no-git-checks --provenance --access public
-        env:
-          NPM_CONFIG_PROVENANCE: true
+  publish:
+    name: Publish to npm
+    needs: [check-version, release]
+    if: needs.check-version.outputs.version_changed == 'true'
+    uses: ./.github/workflows/publish.yml
+    with:
+      dry_run: false
 
   notify:
     name: Notify Release Success
     runs-on: ubuntu-latest
-    needs: [check-version, release]
-    if: always() && needs.release.result == 'success'
+    needs: [check-version, release, publish]
+    if: always() && needs.release.result == 'success' && needs.publish.result == 'success'
     steps:
       - name: Release Success Notification
         run: |
