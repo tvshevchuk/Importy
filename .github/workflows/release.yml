@@ -50,7 +50,7 @@ jobs:
     name: Create Release
     runs-on: ubuntu-latest
     needs: check-version
-    if: needs.check-version.outputs.version_changed == 'true' && needs.check-version.outputs.tag_exists == 'false'
+    if: needs.check-version.outputs.version_changed == 'true'
     environment:
       name: releases
     permissions:
@@ -101,14 +101,6 @@ jobs:
             git commit -m "Update changelog for v$VERSION" || echo "No changelog changes to commit"
             git push origin main
           fi
-
-      - name: Create Git Tag
-        run: |
-          VERSION="${{ needs.check-version.outputs.new_version }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "v$VERSION" -m "Release v$VERSION"
-          git push origin "v$VERSION"
 
       - name: Extract changelog for release
         id: changelog
