@@ -137,10 +137,10 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Publish to npm
-        run: pnpm publish --no-git-checks
+      - name: Publish to npm with provenance
+        run: pnpm publish --no-git-checks --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
 
   notify:
     name: Notify Release Success

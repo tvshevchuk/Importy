@@ -68,13 +68,13 @@ jobs:
           echo "🧪 Performing dry run..."
           pnpm publish --dry-run --no-git-checks
 
-      - name: Publish to npm
+      - name: Publish to npm with provenance
         if: github.event.inputs.dry_run != 'true'
         run: |
           echo "📦 Publishing to npm..."
-          pnpm publish --no-git-checks
+          pnpm publish --no-git-checks --provenance --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
 
       - name: Success notification
         run: |
