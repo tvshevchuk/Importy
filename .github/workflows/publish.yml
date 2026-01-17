@@ -71,7 +71,9 @@ jobs:
         if: inputs.dry_run != true
         run: |
           echo "📦 Publishing to npm..."
-          pnpm publish --no-git-checks --provenance --access public
+          echo "npm version: $(npm --version)"
+          echo "node version: $(node --version)"
+          npm publish --provenance --access public
         env:
           NPM_CONFIG_PROVENANCE: true
 
