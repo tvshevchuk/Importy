@@ -100,8 +100,9 @@ describe('Importy CLI', () => {
     }
     
     // Run the CLI command
-    const result = execSync(
-          `node --no-warnings --loader ts-node/esm ${cliPath} --dir "${testDirPath}" --lib ui-library`,
+    const result = execFileSync(
+          'node',
+          ['--no-warnings', '--loader', 'ts-node/esm', cliPath, '--dir', testDirPath, '--lib', 'ui-library'],
           { encoding: 'utf8', cwd: __dirname }
         );
     
