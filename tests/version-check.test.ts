@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { readFileSync } from 'node:fs';
 
@@ -14,7 +14,7 @@ describe('Node.js Version Check', () => {
   beforeEach(() => {
     // Ensure the build exists
     try {
-      execSync('npm run build', { stdio: 'pipe' });
+      execFileSync('npm', ['run', 'build'], { stdio: 'pipe' });
     } catch (error) {
       throw new Error('Build failed before running version tests');
     }
@@ -30,12 +30,12 @@ describe('Node.js Version Check', () => {
   });
 
   it('should accept Node.js 18+', () => {
-    const result = execSync(`node ${distPath} --version`, { encoding: 'utf8' });
+    const result = execFileSync('node', [distPath, '--version'], { encoding: 'utf8' });
     expect(result.trim()).toBe(currentVersion);
   });
 
   it('should show help when Node.js version is supported', () => {
-    const result = execSync(`node ${distPath} --help`, { encoding: 'utf8' });
+    const result = execFileSync('node', [distPath, '--help'], { encoding: 'utf8' });
     expect(result).toContain('Usage:');
     expect(result).toContain('Analyze JavaScript/TypeScript imports');
   });
@@ -48,7 +48,7 @@ describe('Node.js Version Check', () => {
     expect(majorVersion).toBeGreaterThanOrEqual(18);
     
     // Test that the CLI runs without version errors
-    const result = execSync(`node ${distPath} --version`, { encoding: 'utf8' });
+    const result = execFileSync('node', [distPath, '--version'], { encoding: 'utf8' });
     expect(result.trim()).toBe(currentVersion);
   });
 
@@ -68,7 +68,7 @@ describe('Node.js Version Check', () => {
     `;
     
     try {
-      execSync(`node --input-type=module -e "${mockScript}"`, { 
+      execFileSync('node', ['--input-type=module', '-e', mockScript], { 
         stdio: 'pipe',
         encoding: 'utf8'
       });
