@@ -283,36 +283,42 @@ update_version_references "$CURRENT_VERSION" "$NEW_VERSION"
 TODAY=$(date +%Y-%m-%d)
 echo "📝 Generating changelog from commits..."
 
-CHANGELOG_ENTRY=$(generate_changelog "$NEW_VERSION" "$TODAY")
+# Generate changelog entry and save to temp file (avoids awk newline issues)
+ENTRY_FILE=$(mktemp)
+generate_changelog "$NEW_VERSION" "$TODAY" > "$ENTRY_FILE"
 
 if [ -f CHANGELOG.md ]; then
-  # Create a temporary file with the new entry
   TEMP_FILE=$(mktemp)
 
-  # Find the line after the header (after "Semantic Versioning" line) and insert new entry
-  awk -v entry="$CHANGELOG_ENTRY" '
-    /^## \[/ && !inserted {
-      print entry
-      print ""
-      inserted=1
-    }
-    {print}
-  ' CHANGELOG.md > "$TEMP_FILE"
+  # Find the first version header and insert new entry before it
+  # Using sed to find line number, then head/tail to split and combine
+  FIRST_VERSION_LINE=$(grep -n "^## \[" CHANGELOG.md | head -1 | cut -d: -f1)
 
-  # If no version header was found, insert after the header section
-  if ! grep -q "^## \[$NEW_VERSION\]" "$TEMP_FILE"; then
-    awk -v entry="$CHANGELOG_ENTRY" '
-      /adheres to \[Semantic Versioning\]/ {
-        print
-        print ""
-        print entry
-        next
-      }
-      {print}
-    ' CHANGELOG.md > "$TEMP_FILE"
+  if [ -n "$FIRST_VERSION_LINE" ]; then
+    # Insert before first version header
+    head -n $((FIRST_VERSION_LINE - 1)) CHANGELOG.md > "$TEMP_FILE"
+    cat "$ENTRY_FILE" >> "$TEMP_FILE"
+    echo "" >> "$TEMP_FILE"
+    tail -n +"$FIRST_VERSION_LINE" CHANGELOG.md >> "$TEMP_FILE"
+  else
+    # No version header found, insert after the header section
+    HEADER_END=$(grep -n "adheres to \[Semantic Versioning\]" CHANGELOG.md | cut -d: -f1)
+    if [ -n "$HEADER_END" ]; then
+      head -n "$HEADER_END" CHANGELOG.md > "$TEMP_FILE"
+      echo "" >> "$TEMP_FILE"
+      cat "$ENTRY_FILE" >> "$TEMP_FILE"
+      tail -n +"$((HEADER_END + 1))" CHANGELOG.md >> "$TEMP_FILE"
+    else
+      # Fallback: just prepend to file after first line
+      head -n 1 CHANGELOG.md > "$TEMP_FILE"
+      echo "" >> "$TEMP_FILE"
+      cat "$ENTRY_FILE" >> "$TEMP_FILE"
+      tail -n +2 CHANGELOG.md >> "$TEMP_FILE"
+    fi
   fi
 
   mv "$TEMP_FILE" CHANGELOG.md
+  rm -f "$ENTRY_FILE"
   echo "✅ Changelog updated with new entry"
 else
   # Create new CHANGELOG.md if it doesn't exist
@@ -324,8 +330,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-$CHANGELOG_ENTRY
 EOF
+  cat "$ENTRY_FILE" >> CHANGELOG.md
+  rm -f "$ENTRY_FILE"
   echo "✅ Created new CHANGELOG.md"
 fi
 
