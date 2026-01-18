@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-01-18
+
+### ✨ Added
+- Add changelog generation and version reference updates to release script
+- Add permissions for id-token in publish job
+- Add version logging before npm publish step in workflow
+
+### 🔄 Changed
+- Update Node.js version to 25 in CI workflows and package configuration
+- Update Node.js version to 24 across workflows and package configuration
+
+### 📝 Other
+- Improve changelog generation logic for better entry insertion
+- Refactor import statements for improved clarity and conciseness
+- Refactor code structure for improved readability and maintainability
+- Potential fix for code scanning alert no. 18: Workflow does not contain permissions (#14)
+- Potential fix for code scanning alert no. 3: Shell command built from environment values (#13)
+- Potential fix for code scanning alert no. 16: Shell command built from environment values (#12)
+- Remove environment specification from publish job in workflow
+- Refactor publish workflow to improve version handling and simplify job structure
+- Enhance npm publish steps to include provenance and public access
+- Remove tag existence check from release job condition and eliminate redundant tag creation step
+
 ## [0.1.2] - 2025-06-05
 
 ### 🔧 Fixed
