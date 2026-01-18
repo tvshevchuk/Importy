@@ -21,7 +21,6 @@ Please **do not** report security vulnerabilities through public GitHub issues, 
 
 Send your security report to one of the following:
 
-- **Email**: [maintainer-email@example.com] (replace with actual maintainer email)
 - **GitHub Security Advisory**: Use GitHub's private vulnerability reporting feature
 - **Direct Message**: Contact the maintainer directly through GitHub
 
@@ -205,10 +204,9 @@ Before using Importy in production environments:
 
 For security-related questions or concerns:
 
-- **Security Email**: [security@example.com] (replace with actual contact)
 - **Maintainer**: [@tvshevchuk](https://github.com/tvshevchuk)
 - **Repository**: [https://github.com/tvshevchuk/Importy](https://github.com/tvshevchuk/Importy)
 
 ---
 
-This security policy is effective as of the latest version and will be updated as needed. Last updated: [Current Date]
+This security policy is effective as of the latest version and will be updated as needed. Last updated: 18.01.2026
