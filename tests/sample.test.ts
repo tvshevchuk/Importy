@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -100,8 +100,9 @@ describe('Importy CLI', () => {
     }
     
     // Run the CLI command
-    const result = execSync(
-          `node --no-warnings --loader ts-node/esm ${cliPath} --dir "${testDirPath}" --lib ui-library`,
+    const result = execFileSync(
+          'node',
+          ['--no-warnings', '--loader', 'ts-node/esm', cliPath, '--dir', testDirPath, '--lib', 'ui-library'],
           { encoding: 'utf8', cwd: __dirname }
         );
     
@@ -170,8 +171,9 @@ describe('Importy CLI', () => {
     }
     
     // Run the CLI command
-    const result = execSync(
-          `node --no-warnings --loader ts-node/esm ${cliPath} --dir "${testDirPath}" --lib ui-library`,
+    const result = execFileSync(
+          'node',
+          ['--no-warnings', '--loader', 'ts-node/esm', cliPath, '--dir', testDirPath, '--lib', 'ui-library'],
           { encoding: 'utf8', cwd: __dirname }
         );
     
