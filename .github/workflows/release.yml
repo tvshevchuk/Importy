@@ -121,6 +121,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [check-version, release, publish]
     if: always() && needs.release.result == 'success' && needs.publish.result == 'success'
+    permissions: {}
     steps:
       - name: Release Success Notification
         run: |
